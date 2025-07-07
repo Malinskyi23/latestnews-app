@@ -1,13 +1,17 @@
 import type { News } from '@/shared/api/generated';
 import { formatTimeAgo } from '@/shared/helpers';
 import { ExportOutlined } from '@ant-design/icons';
-import { Avatar, List } from 'antd';
+import { Avatar, List, Skeleton } from 'antd';
 
 interface NewsArticlesListProps {
   newsArticles: News[];
+  loading: boolean;
 }
 
-export const NewsArticlesList = ({ newsArticles }: NewsArticlesListProps) => {
+export const NewsArticlesList = ({
+  newsArticles,
+  loading = true,
+}: NewsArticlesListProps) => {
   return (
     <List
       itemLayout="horizontal"
@@ -20,15 +24,17 @@ export const NewsArticlesList = ({ newsArticles }: NewsArticlesListProps) => {
             </a>,
           ]}
         >
-          <List.Item.Meta
-            avatar={<Avatar size={64} shape="square" src={article.image} />}
-            title={article.title}
-            description={
-              <>
-                {formatTimeAgo(article.published)} • by {article.author}
-              </>
-            }
-          />
+          <Skeleton avatar title={false} loading={loading} active>
+            <List.Item.Meta
+              avatar={<Avatar size={64} shape="square" src={article.image} />}
+              title={article.title}
+              description={
+                <>
+                  {formatTimeAgo(article.published)} • by {article.author}
+                </>
+              }
+            />
+          </Skeleton>
         </List.Item>
       )}
     />
