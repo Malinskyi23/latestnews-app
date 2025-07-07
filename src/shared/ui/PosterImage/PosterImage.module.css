@@ -1,0 +1,3 @@
+.posterSkeletonWrapper :global(.ant-skeleton-element) {
+  width: 100% !important;
+}

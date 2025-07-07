@@ -1,0 +1,33 @@
+.dots.slick-dots > li {
+  width: 8px;
+  height: 8px;
+  background-color: #cddef8;
+  border-radius: 35px;
+}
+
+.dots.slick-dots > li.slick-active {
+  width: 30px;
+  background-color: #3172d2;
+}
+
+:global(.slick-dots) {
+  bottom: 16px; /* или сколько нужно */
+  display: flex !important;
+  align-items: center;
+  gap: 6px;
+  padding-left: 8px;
+}
+
+:global(.slick-dots li) {
+  /* width: 8px !important;
+  height: 8px !important; */
+  background-color: #3172d2;
+  border-radius: 50%;
+}
+
+/* :global(.slick-dots li.slick-active) {
+  width: 30px !important;
+  height: 8px !important;
+  border-radius: 35px;
+  background-color: ;
+} */
