@@ -48,7 +48,10 @@ export const MainPage = () => {
         <div className={styles.container}>
           <Card variant={'borderless'} style={{ background: colorBgLayout }}>
             {result.data?.news.length && (
-              <NewsArticlesList newsArticles={result.data.news} />
+              <NewsArticlesList
+                newsArticles={result.data.news}
+                loading={result.isFetching}
+              />
             )}
           </Card>
         </div>
