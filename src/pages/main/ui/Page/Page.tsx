@@ -1,13 +1,12 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment, react/prop-types */
 // @ts-nocheck
-
+import { Hero } from '@/features/hero';
 import { useGetLatestNewsQuery } from '@/shared/api/currentsApi';
-import { Alert, Card, Divider, Spin, theme } from 'antd';
+import { Alert, Card, Flex, Spin, theme } from 'antd';
 import { useState, type ReactNode } from 'react';
 
-import homeDesktopLight from '../../../../shared/assets/images/home-desktop-light2x.webp';
 import { NewsArticlesList } from '../NewsArticlesList/NewsArticlesList';
-import { NewsSlider } from '../NewsSlider/NewsSlider';
+import { NewsCategories } from '../NewsCategories/NewsCategories';
 import { SearchBar } from '../SearchBar/SearchBar';
 import styles from './styles.module.css';
 
@@ -18,6 +17,7 @@ export const MainPage = () => {
     token: { colorBgLayout },
   } = theme.useToken();
   const [pageNumber, setPageNumber] = useState(1);
+  const [selectedCategory, setSelectedCategory] = useState('');
 
   const goToPreviousPage = () => setPageNumber(state => Math.max(state - 1, 1));
   const goToNextPage = () => setPageNumber(state => state + 1);
@@ -25,6 +25,7 @@ export const MainPage = () => {
   const result = useGetLatestNewsQuery({
     page_number: pageNumber,
     page_size: PAGE_SIZE,
+    category: selectedCategory ? selectedCategory : '',
   });
 
   let content: ReactNode;
@@ -34,43 +35,38 @@ export const MainPage = () => {
   } else if (result.isSuccess) {
     content = (
       <>
-        <div className={styles.container}>
-          {result.data?.news.length && <NewsSlider list={result.data?.news} />}
-        </div>
-        <Divider style={{ marginBottom: 0 }} />
+        <Hero />
+
         <div
           style={{
-            minHeight: 400,
-            backgroundImage: `url(${homeDesktopLight})`,
-            backgroundRepeat: 'no-repeat',
-            backgroundPosition: 'center ',
+            maxWidth: '1200px',
+            width: '100%',
+            margin: '0 auto',
+            padding: '24px',
           }}
         >
-          <div
-            style={{
-              maxWidth: '1200px',
-              width: '100%',
-              margin: '0 auto',
-              padding: '24px',
-            }}
-          >
-            <SearchBar />
-          </div>
+          <SearchBar />
         </div>
-        <Divider style={{ marginTop: 0 }} />
+
         <div className={styles.container}>
-          <Card variant={'borderless'} style={{ background: colorBgLayout }}>
-            {result.data?.news.length && (
-              <NewsArticlesList
-                articles={result.data.news}
-                loading={result.isFetching}
-                current={pageNumber}
-                pageSize={PAGE_SIZE}
-                onPreviousPage={goToPreviousPage}
-                onNextPage={goToNextPage}
-              />
-            )}
-          </Card>
+          <Flex vertical gap={16}>
+            <NewsCategories
+              selected={selectedCategory}
+              onClick={setSelectedCategory}
+            />
+            <Card variant={'borderless'} style={{ background: colorBgLayout }}>
+              {result.data?.news.length && (
+                <NewsArticlesList
+                  articles={result.data.news}
+                  loading={result.isFetching}
+                  current={pageNumber}
+                  pageSize={PAGE_SIZE}
+                  onPreviousPage={goToPreviousPage}
+                  onNextPage={goToNextPage}
+                />
+              )}
+            </Card>
+          </Flex>
         </div>
       </>
     );
@@ -92,10 +88,3 @@ export const MainPage = () => {
 
   return <>{content}</>;
 };
-
-//  <Flex vertical style={{ width: '100%' }} gap={16}>
-//         <NewsBanner item={result.data.news[0]} />
-
-//         <SearchBar />
-//         <NewsArticlesList newsArticles={result.data.news} />
-//       </Flex>
