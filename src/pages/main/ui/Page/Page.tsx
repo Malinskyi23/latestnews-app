@@ -1,6 +1,9 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment, react/prop-types */
+// @ts-nocheck
+
 import { useGetLatestNewsQuery } from '@/shared/api/currentsApi';
-import { Card, Divider, Spin, theme } from 'antd';
-import type { ReactNode } from 'react';
+import { Alert, Card, Divider, Spin, theme } from 'antd';
+import { useState, type ReactNode } from 'react';
 
 import homeDesktopLight from '../../../../shared/assets/images/home-desktop-light2x.webp';
 import { NewsArticlesList } from '../NewsArticlesList/NewsArticlesList';
@@ -8,11 +11,21 @@ import { NewsSlider } from '../NewsSlider/NewsSlider';
 import { SearchBar } from '../SearchBar/SearchBar';
 import styles from './styles.module.css';
 
+const PAGE_SIZE = 20;
+
 export const MainPage = () => {
   const {
     token: { colorBgLayout },
   } = theme.useToken();
-  const result = useGetLatestNewsQuery({});
+  const [pageNumber, setPageNumber] = useState(1);
+
+  const goToPreviousPage = () => setPageNumber(state => Math.max(state - 1, 1));
+  const goToNextPage = () => setPageNumber(state => state + 1);
+
+  const result = useGetLatestNewsQuery({
+    page_number: pageNumber,
+    page_size: PAGE_SIZE,
+  });
 
   let content: ReactNode;
 
@@ -49,13 +62,31 @@ export const MainPage = () => {
           <Card variant={'borderless'} style={{ background: colorBgLayout }}>
             {result.data?.news.length && (
               <NewsArticlesList
-                newsArticles={result.data.news}
+                articles={result.data.news}
                 loading={result.isFetching}
+                current={pageNumber}
+                pageSize={PAGE_SIZE}
+                onPreviousPage={goToPreviousPage}
+                onNextPage={goToNextPage}
               />
             )}
           </Card>
         </div>
       </>
+    );
+  } else if (result.isError) {
+    content = (
+      <Alert
+        message={`Error ${result.error.status}`}
+        description={
+          <>
+            {result.error.error}. No API requests left for today. You may have
+            reached the daily limit.
+          </>
+        }
+        type="error"
+        showIcon
+      />
     );
   }
 

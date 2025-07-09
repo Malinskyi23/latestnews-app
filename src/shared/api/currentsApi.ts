@@ -10,18 +10,17 @@ export const currentsApi = createApi({
     prepareHeaders: headers => {
       if (API_KEY) {
         headers.set('Authorization', API_KEY);
-        // headers.set('Content-Type', 'application/json');
       }
       return headers;
     },
   }),
   endpoints: builder => ({
-    // builder.query<ReturnedData, QueryArgs>
-    // ReturnedData - the response data returned from the server. (requset result)
-    // QueryArgs - the arguments passed to the hook and used to build the request
-
+    // getLatestNews: builder.query({
+    //   query: () => `/latest-news`,
+    // }),
     getLatestNews: builder.query({
-      query: () => `/latest-news`,
+      query: ({ page_number = 1, page_size = 10 }) =>
+        `/search?&page_number=${page_number}&page_size=${page_size}`,
     }),
   }),
 });
