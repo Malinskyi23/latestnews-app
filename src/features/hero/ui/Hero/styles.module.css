@@ -1,0 +1,12 @@
+.container {
+  margin: 0 auto;
+  padding: 24;
+  max-width: 1200px;
+  width: 100%;
+}
+
+.wrapperBg {
+  position: absolute;
+  right: 150px;
+  bottom: 0;
+}

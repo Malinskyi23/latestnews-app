@@ -19,8 +19,9 @@ export const LayoutHeader = () => {
         <img src={CurrentsNewsApiLogo} />
       </Link>
       <Typography.Text>
-        Subscription Plan: <Tag color="green">Free Plan</Tag> 20 requests
-        available per day.
+        Subscription Plan: <Tag color="green">Free Plan</Tag>{' '}
+        <Typography.Text type="danger">20</Typography.Text> requests available
+        per day.
       </Typography.Text>
 
       {/* <Search /> */}

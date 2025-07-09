@@ -19,10 +19,13 @@ export const currentsApi = createApi({
     //   query: () => `/latest-news`,
     // }),
     getLatestNews: builder.query({
-      query: ({ page_number = 1, page_size = 10 }) =>
-        `/search?&page_number=${page_number}&page_size=${page_size}`,
+      query: ({ page_number = 1, page_size = 10, category }) =>
+        `/search?&page_number=${page_number}&page_size=${page_size}&category=${category}`,
+    }),
+    getNewsCategories: builder.query({
+      query: () => '/available/categories',
     }),
   }),
 });
 
-export const { useGetLatestNewsQuery } = currentsApi;
+export const { useGetLatestNewsQuery, useGetNewsCategoriesQuery } = currentsApi;
