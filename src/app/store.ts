@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-nocheck
 import { rootReducer } from '@/app/rootReducer.ts';
-import { currentsApi } from '@/shared/api';
+import { currentsApi, newsApi } from '@/shared/api';
 import {
   configureStore,
   type Action,
@@ -43,7 +43,9 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat(currentsApi.middleware),
+    })
+      .concat(currentsApi.middleware)
+      .concat(newsApi.middleware),
   // .concat(logger),
 });
 

@@ -1,4 +1,4 @@
-import { CurrentsNewsApiLogo } from '@/shared/assets/icons';
+import { CurrentsNewsApiLogoMini } from '@/shared/assets/icons';
 import { Layout, Typography } from 'antd';
 import { Link } from 'react-router-dom';
 
@@ -23,7 +23,7 @@ export const LayoutFooter = () => {
         </Typography.Text>
 
         <Link to="/" className={styles.layoutLink}>
-          <img src={CurrentsNewsApiLogo} />
+          <img src={CurrentsNewsApiLogoMini} />
         </Link>
       </Typography>
     </Layout.Footer>

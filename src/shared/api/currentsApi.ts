@@ -15,12 +15,20 @@ export const currentsApi = createApi({
     },
   }),
   endpoints: builder => ({
-    // getLatestNews: builder.query({
-    //   query: () => `/latest-news`,
-    // }),
     getLatestNews: builder.query({
-      query: ({ page_number = 1, page_size = 10, category }) =>
-        `/search?&page_number=${page_number}&page_size=${page_size}&category=${category}`,
+      query: ({ page_number = 1, page_size = 10, category }) => {
+        const params = new URLSearchParams();
+
+        if (page_number !== undefined)
+          params.append('page_number', String(page_number));
+
+        if (page_size !== undefined)
+          params.append('page_size', String(page_size));
+
+        if (category) params.append('category', category);
+
+        return `/search?${params.toString()}`;
+      },
     }),
     getNewsCategories: builder.query({
       query: () => '/available/categories',

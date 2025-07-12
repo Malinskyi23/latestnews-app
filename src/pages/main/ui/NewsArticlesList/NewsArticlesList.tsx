@@ -1,50 +1,25 @@
-import type { News } from '@/shared/api/generated';
+// Note: totalResults and pageSize don't guarantee the actual number of returned articles.
+// Sometimes the API returns fewer articles than expected, possibly due to internal filtering,
+// licensing restrictions, or how the API rounds or calculates totalResults.
+
 import { formatTimeAgo } from '@/shared/helpers';
-import { ExportOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
-import { Avatar, Button, Flex, List, Skeleton, Space } from 'antd';
+import type { NewsArticle } from '@/shared/types';
+import { ExportOutlined } from '@ant-design/icons';
+import { Avatar, List, Skeleton } from 'antd';
 
 interface NewsArticlesListProps {
-  articles: News[];
+  articles: NewsArticle[];
   loading: boolean;
-  current: number;
-  pageSize: number;
-  onPreviousPage: () => void;
-  onNextPage: () => void;
 }
 
 export const NewsArticlesList = ({
   articles,
   loading = true,
-  current,
-  pageSize,
-  onPreviousPage,
-  onNextPage,
 }: NewsArticlesListProps) => {
   return (
     <List
       itemLayout="horizontal"
       dataSource={articles}
-      header={
-        <Flex justify="end">
-          <Space>
-            <Button
-              disabled={current === 1}
-              icon={<LeftOutlined />}
-              onClick={onPreviousPage}
-            >
-              Previous
-            </Button>
-            <Button
-              disabled={articles.length < pageSize}
-              icon={<RightOutlined />}
-              iconPosition="end"
-              onClick={onNextPage}
-            >
-              Next
-            </Button>
-          </Space>
-        </Flex>
-      }
       renderItem={article => (
         <List.Item
           actions={[
@@ -55,11 +30,13 @@ export const NewsArticlesList = ({
         >
           <Skeleton avatar title={false} loading={loading} active>
             <List.Item.Meta
-              avatar={<Avatar size={64} shape="square" src={article.image} />}
+              avatar={
+                <Avatar size={64} shape="square" src={article.urlToImage} />
+              }
               title={article.title}
               description={
                 <>
-                  {formatTimeAgo(article.published)} • by {article.author}
+                  {formatTimeAgo(article.publishedAt)} • by {article.author}
                 </>
               }
             />
