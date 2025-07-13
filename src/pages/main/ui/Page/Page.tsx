@@ -5,22 +5,24 @@ import { useGetNewsHeadlinesQuery } from '@/shared/api/newsApi';
 import { Alert, Card, Flex, Spin, theme } from 'antd';
 import { useState, type ReactNode } from 'react';
 
-// import { Countries } from '../Countries/Countries';
+import { SearchBar } from '../../../../widgets/SearchBar/ui/SearchBar/SearchBar';
 import { NewsArticlesList } from '../NewsArticlesList/NewsArticlesList';
 import { NewsCategories } from '../NewsCategories/NewsCategories';
-import { SearchBar } from '../SearchBar/SearchBar';
 import styles from './styles.module.css';
 
 export const MainPage = () => {
   const {
     token: { colorBgLayout },
   } = theme.useToken();
-  const [selectedCategory, setSelectedCategory] = useState('');
-  // const [selectedCountry, setSelectedCountry] = useState('us');
 
-  const result = useGetNewsHeadlinesQuery({
-    category: selectedCategory,
-  });
+  const [selectedCategory, setSelectedCategory] = useState('');
+
+  const result = useGetNewsHeadlinesQuery(
+    {
+      category: selectedCategory,
+    },
+    // { skip: !selectedCategory },
+  );
 
   let content: ReactNode;
 
@@ -53,11 +55,12 @@ export const MainPage = () => {
               onClick={setSelectedCategory}
             />
             <Card variant={'borderless'} style={{ background: colorBgLayout }}>
-              {/* {result.data?.articles.length && ( */}
-              <NewsArticlesList
-                articles={result.data.articles}
-                loading={result.isFetching}
-              />
+              {result.data?.articles.length && (
+                <NewsArticlesList
+                  articles={result.data.articles}
+                  loading={result.isFetching}
+                />
+              )}
             </Card>
           </Flex>
         </div>
