@@ -2,10 +2,11 @@
 // @ts-nocheck
 import { Hero } from '@/features/hero';
 import { useGetNewsHeadlinesQuery } from '@/shared/api/newsApi';
-import { Alert, Card, Flex, Spin, theme } from 'antd';
+import { Alert, Card, Col, Flex, Row, Spin, theme } from 'antd';
 import { useState, type ReactNode } from 'react';
 
 import { SearchBar } from '../../../../widgets/SearchBar/ui/SearchBar/SearchBar';
+import { BannersList } from '../BannersList/BannersList';
 import { NewsArticlesList } from '../NewsArticlesList/NewsArticlesList';
 import { NewsCategories } from '../NewsCategories/NewsCategories';
 import styles from './styles.module.css';
@@ -46,22 +47,31 @@ export const MainPage = () => {
 
         <div className={styles.container}>
           <Flex vertical gap={16}>
-            {/* <Countries
-              selected={selectedCountry}
-              onClick={setSelectedCountry}
-            /> */}
             <NewsCategories
               selected={selectedCategory}
               onClick={setSelectedCategory}
             />
-            <Card variant={'borderless'} style={{ background: colorBgLayout }}>
-              {result.data?.articles.length && (
-                <NewsArticlesList
+            <Row gutter={[16, 16]}>
+              <Col span={14}>
+                <BannersList
                   articles={result.data.articles}
                   loading={result.isFetching}
                 />
-              )}
-            </Card>
+              </Col>
+              <Col span={10}>
+                <Card
+                  variant={'borderless'}
+                  style={{ background: colorBgLayout }}
+                >
+                  {result.data?.articles.length && (
+                    <NewsArticlesList
+                      articles={result.data.articles}
+                      loading={result.isFetching}
+                    />
+                  )}
+                </Card>
+              </Col>
+            </Row>
           </Flex>
         </div>
       </>
