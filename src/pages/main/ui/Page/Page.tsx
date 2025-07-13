@@ -1,32 +1,28 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment, react/prop-types */
 // @ts-nocheck
 import { Hero } from '@/features/hero';
-import { useGetLatestNewsQuery } from '@/shared/api/currentsApi';
+import { useGetNewsHeadlinesQuery } from '@/shared/api/newsApi';
 import { Alert, Card, Flex, Spin, theme } from 'antd';
 import { useState, type ReactNode } from 'react';
 
+import { SearchBar } from '../../../../widgets/SearchBar/ui/SearchBar/SearchBar';
 import { NewsArticlesList } from '../NewsArticlesList/NewsArticlesList';
 import { NewsCategories } from '../NewsCategories/NewsCategories';
-import { SearchBar } from '../SearchBar/SearchBar';
 import styles from './styles.module.css';
-
-const PAGE_SIZE = 20;
 
 export const MainPage = () => {
   const {
     token: { colorBgLayout },
   } = theme.useToken();
-  const [pageNumber, setPageNumber] = useState(1);
+
   const [selectedCategory, setSelectedCategory] = useState('');
 
-  const goToPreviousPage = () => setPageNumber(state => Math.max(state - 1, 1));
-  const goToNextPage = () => setPageNumber(state => state + 1);
-
-  const result = useGetLatestNewsQuery({
-    page_number: pageNumber,
-    page_size: PAGE_SIZE,
-    category: selectedCategory ? selectedCategory : '',
-  });
+  const result = useGetNewsHeadlinesQuery(
+    {
+      category: selectedCategory,
+    },
+    // { skip: !selectedCategory },
+  );
 
   let content: ReactNode;
 
@@ -39,7 +35,7 @@ export const MainPage = () => {
 
         <div
           style={{
-            maxWidth: '1200px',
+            maxWidth: '768px',
             width: '100%',
             margin: '0 auto',
             padding: '24px',
@@ -50,19 +46,19 @@ export const MainPage = () => {
 
         <div className={styles.container}>
           <Flex vertical gap={16}>
+            {/* <Countries
+              selected={selectedCountry}
+              onClick={setSelectedCountry}
+            /> */}
             <NewsCategories
               selected={selectedCategory}
               onClick={setSelectedCategory}
             />
             <Card variant={'borderless'} style={{ background: colorBgLayout }}>
-              {result.data?.news.length && (
+              {result.data?.articles.length && (
                 <NewsArticlesList
-                  articles={result.data.news}
+                  articles={result.data.articles}
                   loading={result.isFetching}
-                  current={pageNumber}
-                  pageSize={PAGE_SIZE}
-                  onPreviousPage={goToPreviousPage}
-                  onNextPage={goToNextPage}
                 />
               )}
             </Card>

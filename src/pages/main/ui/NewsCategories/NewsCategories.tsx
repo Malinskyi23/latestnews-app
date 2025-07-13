@@ -1,5 +1,5 @@
-import { useGetNewsCategoriesQuery } from '@/shared/api/currentsApi';
-import { Button, Flex } from 'antd';
+import { NEWS_CATEGORIES } from '@/shared/consts/constants';
+import { Button, Flex, Typography } from 'antd';
 import { type ReactNode } from 'react';
 
 interface NewsCategoriesProps {
@@ -8,13 +8,11 @@ interface NewsCategoriesProps {
 }
 
 export const NewsCategories = ({ selected, onClick }: NewsCategoriesProps) => {
-  const result = useGetNewsCategoriesQuery({});
-
-  let content: ReactNode;
-  if (result.isLoading) {
-    content = 'Loading...';
-  } else if (result.isSuccess) {
-    content = (
+  const content: ReactNode = (
+    <>
+      <Typography.Text>
+        Find sources that display news of this category:{' '}
+      </Typography.Text>
       <div
         style={{
           overflowX: 'auto',
@@ -22,11 +20,11 @@ export const NewsCategories = ({ selected, onClick }: NewsCategoriesProps) => {
         }}
       >
         <Flex wrap="nowrap" gap={8}>
-          {result.data?.categories.map((category, idx) => (
+          {NEWS_CATEGORIES.map((category, idx) => (
             <Button
               key={`${category}-${idx}`}
               shape="round"
-              variant="filled"
+              variant="solid"
               color={category === selected ? 'purple' : 'default'}
               onClick={() => onClick(category)}
             >
@@ -35,7 +33,8 @@ export const NewsCategories = ({ selected, onClick }: NewsCategoriesProps) => {
           ))}
         </Flex>
       </div>
-    );
-  }
+    </>
+  );
+
   return <>{content}</>;
 };

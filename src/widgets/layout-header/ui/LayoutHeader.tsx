@@ -1,5 +1,5 @@
 // import { Search } from '@/features/search';
-import { CurrentsNewsApiLogo } from '@/shared/assets/icons';
+import { CurrentsNewsApiLogoMini } from '@/shared/assets/icons';
 import { Layout, Tag, theme, Typography } from 'antd';
 import { Link } from 'react-router-dom';
 
@@ -16,15 +16,13 @@ export const LayoutHeader = () => {
       style={{ backgroundColor: colorBgContainer }}
     >
       <Link to="/" className={styles.layoutLink}>
-        <img src={CurrentsNewsApiLogo} />
+        <img src={CurrentsNewsApiLogoMini} />
       </Link>
       <Typography.Text>
-        Subscription Plan: <Tag color="green">Free Plan</Tag>{' '}
-        <Typography.Text type="danger">20</Typography.Text> requests available
+        Subscription Plan: <Tag color="green">Developer</Tag>{' '}
+        <Typography.Text type="danger">100</Typography.Text> requests available
         per day.
       </Typography.Text>
-
-      {/* <Search /> */}
     </Layout.Header>
   );
 };
