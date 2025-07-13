@@ -1,19 +1,19 @@
-import type { News } from '@/shared/api/generated';
 import { formatTimeAgo } from '@/shared/helpers';
-import { Card } from 'antd';
+import type { NewsArticle } from '@/shared/types';
+import { Card, Image } from 'antd';
 
 interface NewsBannerProps {
-  item: News;
+  item: NewsArticle;
 }
 
 export const NewsBanner = ({ item }: NewsBannerProps) => {
   return (
-    <Card>
+    <Card cover={<Image src={item.urlToImage} preview={false} />}>
       <Card.Meta
         title={item.title}
         description={
           <>
-            {formatTimeAgo(item.published)} • by {item.author}
+            {formatTimeAgo(item.publishedAt)} • by {item.author}
           </>
         }
       ></Card.Meta>

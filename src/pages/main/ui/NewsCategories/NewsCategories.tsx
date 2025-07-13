@@ -24,8 +24,8 @@ export const NewsCategories = ({ selected, onClick }: NewsCategoriesProps) => {
             <Button
               key={`${category}-${idx}`}
               shape="round"
-              variant="solid"
-              color={category === selected ? 'purple' : 'default'}
+              variant="filled"
+              color={category === selected ? 'danger' : 'default'}
               onClick={() => onClick(category)}
             >
               {category}
