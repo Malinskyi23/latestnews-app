@@ -1,16 +1,12 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-const API_URL = import.meta.env.VITE_NEWS_API_URL;
-const API_KEY = import.meta.env.VITE_NEWS_API_KEY;
+const API_URL = '/.netlify/functions/get-news';
 
 export const newsApi = createApi({
   reducerPath: 'newsApi',
   baseQuery: fetchBaseQuery({
     baseUrl: API_URL,
     prepareHeaders: headers => {
-      if (API_KEY) {
-        headers.set('Authorization', API_KEY);
-      }
       return headers;
     },
   }),
@@ -23,7 +19,9 @@ export const newsApi = createApi({
         if (pageSize !== undefined) params.append('pageSize', String(pageSize));
         if (page !== undefined) params.append('page', String(page));
 
-        return `/v2/everything?q=${params.toString()}`;
+        params.append('endpoint', 'everything');
+
+        return `?${params.toString()}`;
       },
     }),
     getNewsHeadlines: builder.query({
@@ -36,7 +34,9 @@ export const newsApi = createApi({
         if (pageSize !== undefined) params.append('pageSize', String(pageSize));
         if (page !== undefined) params.append('page', String(page));
 
-        return `/v2/top-headlines?${params.toString()}`;
+        params.append('endpoint', 'top-headlines');
+
+        return `?${params.toString()}`;
       },
     }),
   }),
