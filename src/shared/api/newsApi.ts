@@ -7,12 +7,6 @@ export const newsApi = createApi({
   reducerPath: 'newsApi',
   baseQuery: fetchBaseQuery({
     baseUrl: API_URL,
-    prepareHeaders: headers => {
-      if (API_KEY) {
-        headers.set('x-api-key', API_KEY);
-      }
-      return headers;
-    },
   }),
   endpoints: builder => ({
     getNewsArticles: builder.query({
@@ -23,7 +17,7 @@ export const newsApi = createApi({
         if (pageSize !== undefined) params.append('pageSize', String(pageSize));
         if (page !== undefined) params.append('page', String(page));
 
-        return `/v2/everything?q=${params.toString()}`;
+        return `/v2/everything?q=${params.toString()}&apiKey=${API_KEY}`;
       },
     }),
     getNewsHeadlines: builder.query({
@@ -36,7 +30,7 @@ export const newsApi = createApi({
         if (pageSize !== undefined) params.append('pageSize', String(pageSize));
         if (page !== undefined) params.append('page', String(page));
 
-        return `/v2/top-headlines?${params.toString()}`;
+        return `/v2/top-headlines?${params.toString()}&apiKey=${API_KEY}`;
       },
     }),
   }),
