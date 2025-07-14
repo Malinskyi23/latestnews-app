@@ -9,7 +9,7 @@ export const newsApi = createApi({
     baseUrl: API_URL,
     prepareHeaders: headers => {
       if (API_KEY) {
-        headers.set('Authorization', API_KEY);
+        headers.set('x-api-key', API_KEY);
       }
       return headers;
     },
