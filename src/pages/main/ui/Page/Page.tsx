@@ -6,6 +6,7 @@ import { Alert, Card, Col, Flex, Row, Spin, theme } from 'antd';
 import { useState, type ReactNode } from 'react';
 
 import { SearchBar } from '../../../../widgets/SearchBar/ui/SearchBar/SearchBar';
+import { ArticlePanel } from '../ArticlePanel/ArticlePanel';
 import { BannersList } from '../BannersList/BannersList';
 import { NewsArticlesList } from '../NewsArticlesList/NewsArticlesList';
 import { NewsCategories } from '../NewsCategories/NewsCategories';
@@ -13,10 +14,24 @@ import styles from './styles.module.css';
 
 export const MainPage = () => {
   const {
-    token: { colorBgLayout },
+    token: { colorBgLayout, borderRadiusLG },
   } = theme.useToken();
 
   const [selectedCategory, setSelectedCategory] = useState('');
+
+  const [selectedArticle, setSelectedArticle] = useState('');
+  const onSelect = (title: string) => {
+    setSelectedArticle(title);
+  };
+
+  const [isOpen, setIsOpen] = useState(false);
+  const onOpen = () => {
+    setIsOpen(true);
+  };
+
+  const onClose = () => {
+    setIsOpen(false);
+  };
 
   const result = useGetNewsHeadlinesQuery(
     {
@@ -24,6 +39,12 @@ export const MainPage = () => {
     },
     // { skip: !selectedCategory },
   );
+
+  const foundArticle = selectedArticle
+    ? result.data?.articles.find(article => article.title === selectedArticle)
+    : undefined;
+
+  console.log('foundArticle', foundArticle);
 
   let content: ReactNode;
 
@@ -45,34 +66,44 @@ export const MainPage = () => {
           <SearchBar />
         </div>
 
-        <div className={styles.container}>
-          <Flex vertical gap={16}>
-            <NewsCategories
-              selected={selectedCategory}
-              onClick={setSelectedCategory}
-            />
-            <Row gutter={[16, 16]}>
-              <Col span={14}>
-                <BannersList
-                  articles={result.data.articles}
-                  loading={result.isFetching}
-                />
-              </Col>
-              <Col span={10}>
-                <Card
-                  variant={'borderless'}
-                  style={{ background: colorBgLayout }}
-                >
+        <div
+          className={styles.container}
+          style={{ borderRadius: borderRadiusLG }}
+        >
+          <Card
+            // variant={'borderless'}
+            style={{
+              background: colorBgLayout,
+            }}
+          >
+            <Flex vertical gap={16}>
+              <NewsCategories
+                selected={selectedCategory}
+                onClick={setSelectedCategory}
+              />
+              <Row gutter={[16, 16]}>
+                <Col span={14}>
+                  <BannersList
+                    articles={result.data.articles}
+                    loading={result.isFetching}
+                    onOpen={onOpen}
+                    onSelect={onSelect}
+                  />
+                </Col>
+                <Col span={10}>
                   {result.data?.articles.length && (
                     <NewsArticlesList
                       articles={result.data.articles}
                       loading={result.isFetching}
                     />
                   )}
-                </Card>
-              </Col>
-            </Row>
-          </Flex>
+                </Col>
+              </Row>
+            </Flex>
+          </Card>
+          {foundArticle && (
+            <ArticlePanel item={foundArticle} open={isOpen} onClose={onClose} />
+          )}
         </div>
       </>
     );
