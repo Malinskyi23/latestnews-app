@@ -10,9 +10,9 @@ interface NewsCategoriesProps {
 export const NewsCategories = ({ selected, onClick }: NewsCategoriesProps) => {
   const content: ReactNode = (
     <>
-      <Typography.Text>
+      <Typography.Title level={4} style={{ margin: 0 }}>
         Find sources that display news of this category:{' '}
-      </Typography.Text>
+      </Typography.Title>
       <div
         style={{
           overflowX: 'auto',
