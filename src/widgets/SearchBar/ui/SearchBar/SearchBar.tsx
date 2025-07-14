@@ -1,6 +1,18 @@
 import { useGetNewsArticlesQuery } from '@/shared/api/newsApi';
+import { formatTimeAgo } from '@/shared/helpers';
 import type { NewsArticle } from '@/shared/types';
-import { AutoComplete, Avatar, Empty, Flex, Input, Spin } from 'antd';
+import { ExportOutlined } from '@ant-design/icons';
+import {
+  AutoComplete,
+  Avatar,
+  Descriptions,
+  Empty,
+  Flex,
+  Image,
+  Input,
+  Modal,
+  Spin,
+} from 'antd';
 import { useState } from 'react';
 
 const renderArticle = (article: NewsArticle) => ({
@@ -15,16 +27,20 @@ const renderArticle = (article: NewsArticle) => ({
 
 export const SearchBar = () => {
   const [keywords, setKeywords] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
+
+  const [selectedArticle, setSelectedArticle] = useState('');
+
   const result = useGetNewsArticlesQuery({ q: keywords }, { skip: !keywords });
+
+  const foundArticle = selectedArticle
+    ? result.data?.articles.find(article => article.title === selectedArticle)
+    : undefined;
 
   return (
     <div>
       <AutoComplete
-        options={
-          keywords && result.data?.articles.length
-            ? result.data.articles.map(renderArticle)
-            : []
-        }
+        options={result.data?.articles?.map(renderArticle) ?? []}
         style={{ width: '100%' }}
         notFoundContent={
           result.isFetching ? (
@@ -36,6 +52,12 @@ export const SearchBar = () => {
             />
           ) : null
         }
+        onSelect={value => {
+          console.log('onSelect value', value);
+          setSelectedArticle(value);
+          setIsOpen(true);
+          // onOpen();
+        }}
       >
         <Input.Search
           size="large"
@@ -47,6 +69,60 @@ export const SearchBar = () => {
           disabled={result.isFetching}
         />
       </AutoComplete>
+
+      <Modal
+        title={foundArticle?.title ?? ''}
+        width={768}
+        open={isOpen}
+        onCancel={() => setIsOpen(false)}
+        footer={null}
+      >
+        {foundArticle ? (
+          <Flex vertical gap={16}>
+            <Image src={foundArticle.urlToImage} preview={false} />
+            <Descriptions
+              bordered
+              items={[
+                {
+                  label: 'Author',
+                  children: foundArticle.author,
+                  span: 3,
+                },
+                {
+                  label: 'Content',
+                  children: foundArticle.content,
+                  span: 3,
+                },
+                {
+                  label: 'Description',
+                  children: foundArticle.description,
+                  span: 3,
+                },
+                {
+                  label: 'Resource Article',
+                  children: (
+                    <a
+                      href={foundArticle.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      read <ExportOutlined />
+                    </a>
+                  ),
+                  span: 3,
+                },
+                {
+                  label: 'Published At',
+                  children: formatTimeAgo(foundArticle.publishedAt),
+                  span: 3,
+                },
+              ]}
+            />
+          </Flex>
+        ) : (
+          <Spin size="large" tip="Loading article..." />
+        )}
+      </Modal>
     </div>
   );
 };
