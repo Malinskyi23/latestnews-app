@@ -2,25 +2,24 @@ import { NewsBanner } from '@/features/NewsBanner';
 import type { NewsArticle } from '@/shared/types';
 import { Col, Row, Skeleton } from 'antd';
 
-interface BannersListProps {
+interface NewsArticlesGridProps {
   articles: NewsArticle[];
   loading: boolean;
-  onSelect: (title: string) => void;
-  onOpen: () => void;
+  showModal: () => void;
 }
 
-export const BannersList = ({
-  articles = [],
-  loading = true,
-  onSelect,
-  onOpen,
-}: BannersListProps) => {
+export const NewsArticlesGrid = ({
+  articles,
+  loading,
+  showModal,
+}: NewsArticlesGridProps) => {
   return (
     <Row gutter={[16, 16]}>
       {articles.map((article, idx) => (
-        <Col key={`${idx}-${article.title}`} span={8}>
+        <Col key={`${idx}-${article.title}`} span={24} xs={24} sm={12} md={8}>
           <Skeleton loading={loading}>
-            <NewsBanner item={article} onOpen={onOpen} onSelect={onSelect} />
+            {/* onOpen={onOpen} onSelect={onSelect} */}
+            <NewsBanner item={article} showModal={showModal} />
           </Skeleton>
         </Col>
       ))}

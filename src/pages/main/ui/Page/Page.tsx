@@ -1,127 +1,38 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment, react/prop-types */
-// @ts-nocheck
-import { Hero } from '@/features/hero';
-import { useGetNewsHeadlinesQuery } from '@/shared/api/newsApi';
-import { Alert, Card, Col, Flex, Row, Spin, theme } from 'antd';
+import { NewsArticleModal } from '@/features/news';
+import { Search } from '@/features/Search';
 import { useState, type ReactNode } from 'react';
 
-import { SearchBar } from '../../../../widgets/SearchBar/ui/SearchBar/SearchBar';
-import { ArticlePanel } from '../ArticlePanel/ArticlePanel';
-import { BannersList } from '../BannersList/BannersList';
-import { NewsArticlesList } from '../NewsArticlesList/NewsArticlesList';
-import { NewsCategories } from '../NewsCategories/NewsCategories';
-import styles from './styles.module.css';
+// import styles from './styles.module.css';
 
 export const MainPage = () => {
-  const {
-    token: { colorBgLayout, borderRadiusLG },
-  } = theme.useToken();
-
-  const [selectedCategory, setSelectedCategory] = useState('');
-
-  const [selectedArticle, setSelectedArticle] = useState('');
-  const onSelect = (title: string) => {
-    setSelectedArticle(title);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false);
   };
 
-  const [isOpen, setIsOpen] = useState(false);
-  const onOpen = () => {
-    setIsOpen(true);
-  };
+  // const {
+  //   token: { colorBgLayout, borderRadiusLG },
+  // } = theme.useToken();
 
-  const onClose = () => {
-    setIsOpen(false);
-  };
-
-  const result = useGetNewsHeadlinesQuery(
-    {
-      category: selectedCategory,
-    },
-    // { skip: !selectedCategory },
+  const content: ReactNode = (
+    <>
+      <div
+        style={{
+          maxWidth: '768px',
+          width: '100%',
+          margin: '0 auto',
+          padding: '24px',
+        }}
+      >
+        <Search showModal={showModal} />
+      </div>
+      <NewsArticleModal open={isModalOpen} onCancel={handleCancel} />
+      {/* <Hero /> */}
+    </>
   );
-
-  const foundArticle = selectedArticle
-    ? result.data?.articles.find(article => article.title === selectedArticle)
-    : undefined;
-
-  console.log('foundArticle', foundArticle);
-
-  let content: ReactNode;
-
-  if (result.isLoading) {
-    content = <Spin percent={'auto'} fullscreen />;
-  } else if (result.isSuccess) {
-    content = (
-      <>
-        <Hero />
-
-        <div
-          style={{
-            maxWidth: '768px',
-            width: '100%',
-            margin: '0 auto',
-            padding: '24px',
-          }}
-        >
-          <SearchBar />
-        </div>
-
-        <div
-          className={styles.container}
-          style={{ borderRadius: borderRadiusLG }}
-        >
-          <Card
-            // variant={'borderless'}
-            style={{
-              background: colorBgLayout,
-            }}
-          >
-            <Flex vertical gap={16}>
-              <NewsCategories
-                selected={selectedCategory}
-                onClick={setSelectedCategory}
-              />
-              <Row gutter={[16, 16]}>
-                <Col span={14}>
-                  <BannersList
-                    articles={result.data.articles}
-                    loading={result.isFetching}
-                    onOpen={onOpen}
-                    onSelect={onSelect}
-                  />
-                </Col>
-                <Col span={10}>
-                  {result.data?.articles.length && (
-                    <NewsArticlesList
-                      articles={result.data.articles}
-                      loading={result.isFetching}
-                    />
-                  )}
-                </Col>
-              </Row>
-            </Flex>
-          </Card>
-          {foundArticle && (
-            <ArticlePanel item={foundArticle} open={isOpen} onClose={onClose} />
-          )}
-        </div>
-      </>
-    );
-  } else if (result.isError) {
-    content = (
-      <Alert
-        message={`Error ${result.error.status}`}
-        description={
-          <>
-            {result.error.error}. No API requests left for today. You may have
-            reached the daily limit.
-          </>
-        }
-        type="error"
-        showIcon
-      />
-    );
-  }
 
   return <>{content}</>;
 };

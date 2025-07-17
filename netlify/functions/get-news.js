@@ -20,7 +20,7 @@ export async function handler(event) {
   try {
     const response = await fetch(url, {
       headers: {
-        'X-Api-Key': apiKey, // или 'Authorization': apiKey
+        'X-Api-Key': apiKey, // or 'Authorization': apiKey
       },
     });
 
