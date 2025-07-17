@@ -1,17 +1,17 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-// const API_URL = '/.netlify/functions/get-news';
-const API_URL = import.meta.env.VITE_NEWS_API_URL;
-const API_KEY = import.meta.env.VITE_NEWS_API_KEY;
+const API_URL = '/.netlify/functions/get-news';
+// const API_URL = import.meta.env.VITE_NEWS_API_URL;
+// const API_KEY = import.meta.env.VITE_NEWS_API_KEY;
 
 export const newsApi = createApi({
   reducerPath: 'newsApi',
   baseQuery: fetchBaseQuery({
     baseUrl: API_URL,
     prepareHeaders: headers => {
-      if (API_KEY) {
-        headers.set('Authorization', API_KEY);
-      }
+      // if (API_KEY) {
+      //   headers.set('Authorization', API_KEY);
+      // }
       return headers;
     },
   }),
