@@ -1,8 +1,11 @@
 import { NewsArticleModal } from '@/features/news';
 import { Search } from '@/features/Search';
+import { Typography } from 'antd';
 import { useState, type ReactNode } from 'react';
 
 // import styles from './styles.module.css';
+
+import homeDesktopLight from '../../../../shared/assets/images/home-desktop-light2x.webp';
 
 export const MainPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -21,16 +24,30 @@ export const MainPage = () => {
     <>
       <div
         style={{
-          maxWidth: '768px',
-          width: '100%',
-          margin: '0 auto',
-          padding: '24px',
+          flex: 1,
+
+          backgroundImage: `url(${homeDesktopLight})`,
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center bottom',
+          backgroundSize: '800px 380px',
         }}
       >
-        <Search showModal={showModal} />
+        <div
+          style={{
+            maxWidth: '768px',
+            width: '100%',
+            margin: '0 auto',
+            padding: '24px',
+          }}
+        >
+          <Typography.Title style={{ textAlign: 'center' }}>
+            Latestnews Seacrh
+          </Typography.Title>
+          <Search showModal={showModal} />
+        </div>
+        <NewsArticleModal open={isModalOpen} onCancel={handleCancel} />
+        {/* <Hero /> */}
       </div>
-      <NewsArticleModal open={isModalOpen} onCancel={handleCancel} />
-      {/* <Hero /> */}
     </>
   );
 
