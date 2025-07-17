@@ -16,34 +16,6 @@ export const newsApi = createApi({
     },
   }),
   endpoints: builder => ({
-    // getNewsArticles: builder.query({
-    //   query: ({ q, pageSize, page }) => {
-    //     const params = new URLSearchParams();
-
-    //     if (q) params.append('q', q);
-    //     if (pageSize !== undefined) params.append('pageSize', String(pageSize));
-    //     if (page !== undefined) params.append('page', String(page));
-
-    //     params.append('endpoint', 'everything');
-
-    //     return `?${params.toString()}`;
-    //   },
-    // }),
-    // getNewsHeadlines: builder.query({
-    //   query: ({ country = 'us', category, q, pageSize, page }) => {
-    //     const params = new URLSearchParams();
-
-    //     if (country) params.append('country', country);
-    //     if (category) params.append('category', category);
-    //     if (q) params.append('q', q);
-    //     if (pageSize !== undefined) params.append('pageSize', String(pageSize));
-    //     if (page !== undefined) params.append('page', String(page));
-
-    //     params.append('endpoint', 'top-headlines');
-
-    //     return `?${params.toString()}`;
-    //   },
-    // }),
     getNewsArticles: builder.query({
       query: ({ q, pageSize, page }) => {
         const params = new URLSearchParams();
@@ -52,7 +24,9 @@ export const newsApi = createApi({
         if (pageSize !== undefined) params.append('pageSize', String(pageSize));
         if (page !== undefined) params.append('page', String(page));
 
-        return `/v2/everything?q=${params.toString()}`;
+        params.append('endpoint', 'everything');
+
+        return `?${params.toString()}`;
       },
     }),
     getNewsHeadlines: builder.query({
@@ -65,9 +39,35 @@ export const newsApi = createApi({
         if (pageSize !== undefined) params.append('pageSize', String(pageSize));
         if (page !== undefined) params.append('page', String(page));
 
-        return `/v2/top-headlines?${params.toString()}`;
+        params.append('endpoint', 'top-headlines');
+
+        return `?${params.toString()}`;
       },
     }),
+    // getNewsArticles: builder.query({
+    //   query: ({ q, pageSize, page }) => {
+    //     const params = new URLSearchParams();
+
+    //     if (q) params.append('q', q);
+    //     if (pageSize !== undefined) params.append('pageSize', String(pageSize));
+    //     if (page !== undefined) params.append('page', String(page));
+
+    //     return `/v2/everything?${params.toString()}`;
+    //   },
+    // }),
+    // getNewsHeadlines: builder.query({
+    //   query: ({ country = 'us', category, q, pageSize, page }) => {
+    //     const params = new URLSearchParams();
+
+    //     if (country) params.append('country', country);
+    //     if (category) params.append('category', category);
+    //     if (q) params.append('q', q);
+    //     if (pageSize !== undefined) params.append('pageSize', String(pageSize));
+    //     if (page !== undefined) params.append('page', String(page));
+
+    //     return `/v2/top-headlines?${params.toString()}`;
+    //   },
+    // }),
   }),
 });
 
